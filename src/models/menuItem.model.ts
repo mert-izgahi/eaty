@@ -1,4 +1,4 @@
-import mongoose, { FilterQuery, Model } from "mongoose";
+import mongoose, { FilterQuery, Model, Query, QueryOptions } from "mongoose";
 import NotFoundError from "../errors/NotFound.error";
 
 export interface IMenuItemSchema extends mongoose.Document {
@@ -10,10 +10,12 @@ export interface IMenuItemSchema extends mongoose.Document {
 }
 
 export interface IMenuItem extends Model<IMenuItemSchema> {
-  getAllItems(): Promise<IMenuItemSchema[]>;
+  getItems(Query: FilterQuery<IMenuItemSchema>): Promise<IMenuItemSchema[]>;
   getOneItem(id: string): Promise<IMenuItemSchema>;
   createOneItem(Item: IMenuItemSchema): Promise<IMenuItemSchema>;
-  deleteOneItem(query: FilterQuery<IMenuItemSchema>): Promise<IMenuItemSchema | null>;
+  deleteOneItem(
+    query: FilterQuery<IMenuItemSchema>
+  ): Promise<IMenuItemSchema | null>;
   updateOneItem(id: string, Item: IMenuItemSchema): Promise<IMenuItemSchema>;
 }
 
@@ -51,8 +53,10 @@ const menuItemSchema = new mongoose.Schema({
   },
 });
 
-menuItemSchema.statics.getAllItems = async function () {
-  const menuItems = await this.find();
+menuItemSchema.statics.getItems = async function (
+  query: FilterQuery<IMenuItemSchema> = {}
+) {
+  const menuItems = await this.find(query);
   return menuItems;
 };
 
@@ -61,7 +65,9 @@ menuItemSchema.statics.createOneItem = async function (Item: IMenuItemSchema) {
   return menuItem;
 };
 
-menuItemSchema.statics.deleteOneItem = async function (query: FilterQuery<IMenuItemSchema>) {
+menuItemSchema.statics.deleteOneItem = async function (
+  query: FilterQuery<IMenuItemSchema>
+) {
   const menuItem = await this.findByIdAndDelete(query);
   if (!menuItem) {
     throw new NotFoundError(`Menu item with id ${query} not found`);
@@ -79,9 +85,10 @@ menuItemSchema.statics.getOneItem = async function (id: string) {
 
 menuItemSchema.statics.updateOneItem = async function (
   id: string,
-  Item: IMenuItemSchema
+  Item: IMenuItemSchema,
+  options: QueryOptions = { new: true }
 ) {
-  const menuItem = await this.findByIdAndUpdate(id, Item);
+  const menuItem = await this.findByIdAndUpdate(id, Item, options);
   if (!menuItem) {
     throw new NotFoundError(`Menu item with id ${id} not found`);
   }

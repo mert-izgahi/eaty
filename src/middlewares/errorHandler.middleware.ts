@@ -1,3 +1,4 @@
+import { CastError } from "mongoose";
 import { BadRequestError } from "../errors/BadRequest.error";
 import NotFoundError from "../errors/NotFound.error";
 
@@ -24,7 +25,6 @@ export default function errorHandlerMiddleware(
   }
 
   if (error.name === "ValidationError") {
-    
     const fixedMessage = Object.values((error as any).errors)
       .map((err: any) => err.message)
       .join(", ");
@@ -32,6 +32,25 @@ export default function errorHandlerMiddleware(
       state: "error",
       message: fixedMessage,
       name: error.name,
+    });
+  }
+
+  if (error.name === "CastError") {
+    const { path, value } = error as CastError;
+    return res.status(400).json({
+      state: "error",
+      message: `Invalid value for ${path}: ${value._id}`,
+      name: error.name,
+    });
+  }
+
+  if (error.name === "TypeError") {
+    const { stack } = error;
+    return res.status(500).json({
+      state: "error",
+      message: error.message,
+      name: error.name,
+      stack: stack?.split("\n"),
     });
   }
   return res.status(500).json({
