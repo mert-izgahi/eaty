@@ -145,3 +145,17 @@ export default function router(app: Express) {
   });
 }
 ```
+
+then we can connect menu controller with router by
+```js
+export default function router(app: Express) {
+  app.get("/api/v1/menu-items", getAllMenuItems);
+}
+```
+
+
+#### Setup Postman
+
+- create new collection and inside it add folders (accounts,menu,orders)
+
+- setup environment and endPoint

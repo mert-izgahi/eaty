@@ -7,6 +7,7 @@ const app = express();
 async function startServer() {
   try {
     const port: number = config.get<number>("port");
+    
     const mongoUrl: string = config.get<string>("mongoUrl");
     await connectDb(mongoUrl);
     app.listen(port, () => {
