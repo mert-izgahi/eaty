@@ -147,15 +147,68 @@ export default function router(app: Express) {
 ```
 
 then we can connect menu controller with router by
+
 ```js
 export default function router(app: Express) {
   app.get("/api/v1/menu-items", getAllMenuItems);
 }
 ```
 
-
 #### Setup Postman
 
 - create new collection and inside it add folders (accounts,menu,orders)
 
 - setup environment and endPoint
+
+#### Error Handling
+
+in get menu items service to test errors we can start with throwing new error
+
+```js
+// ***
+throw new Error("Not implemented");
+// ***
+```
+
+create folder in src call it middlewares and in index.ts
+after router
+
+```js
+// ***
+router(app);
+app.use(errorHandlerMiddleware);
+// ***
+```
+
+and menuItems.controller.ts
+
+```js
+export async function getAllMenuItems(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    throw new Error("Not implemented");
+  } catch (error) {
+    next(error);
+  }
+}
+```
+
+and in errorHandler middleware
+
+```js
+export default function errorHandlerMiddleware(
+  error: Error,
+  req: any,
+  res: any,
+  next: any
+) {
+  return res.status(500).json({
+    state: "error",
+    message: error.message,
+    name: error.name,
+  });
+}
+```

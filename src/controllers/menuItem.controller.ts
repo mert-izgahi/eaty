@@ -4,5 +4,9 @@ export async function getAllMenuItems(
   res: Response,
   next: NextFunction
 ) {
-  return res.send("All menu items");
+  try {
+    throw new Error("Not implemented");
+  } catch (error) {
+    next(error);
+  }
 }

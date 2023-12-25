@@ -2,12 +2,13 @@ import express from "express";
 import { connectDb } from "./utils/connectDb";
 import config from "config";
 import router from "./router";
+import errorHandlerMiddleware from "./middlewares/errorHandler.middleware";
 const app = express();
 
 async function startServer() {
   try {
     const port: number = config.get<number>("port");
-    
+
     const mongoUrl: string = config.get<string>("mongoUrl");
     await connectDb(mongoUrl);
     app.listen(port, () => {
@@ -17,6 +18,8 @@ async function startServer() {
     });
 
     router(app);
+    
+    app.use(errorHandlerMiddleware);
   } catch (error) {
     console.log(error);
   }
