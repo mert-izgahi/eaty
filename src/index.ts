@@ -4,7 +4,7 @@ import config from "config";
 import router from "./router";
 import errorHandlerMiddleware from "./middlewares/errorHandler.middleware";
 const app = express();
-
+app.use(express.json());
 async function startServer() {
   try {
     const port: number = config.get<number>("port");
