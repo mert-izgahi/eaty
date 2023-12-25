@@ -60,7 +60,7 @@ startServer();
 
 #### Setup Environment Vars
 
-create folder config and then file with static name default.ts inside config folder
+create folder configs and then file with static name default.ts inside config folder
 
 ```js
 export default {
@@ -86,4 +86,33 @@ async function startServer() {
     console.log(error);
   }
 }
+```
+
+#### Modeling Menu Item
+
+we can start building menu item model and define required properties that we will save it to database
+
+- create new folder in src call it models
+- inside model create new file with name menuItem.model.ts
+
+```js
+import mongoose from "mongoose";
+
+export interface IMenuItem extends mongoose.Document {
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  category: string;
+}
+
+const menuItemSchema = new mongoose.Schema({
+  name: String,
+  description: String,
+  price: Number,
+  image: String,
+  category: String,
+});
+
+export default mongoose.model < IMenuItem > ("MenuItem", menuItemSchema);
 ```
