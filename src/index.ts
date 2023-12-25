@@ -1,12 +1,8 @@
 import express from "express";
 import { connectDb } from "./utils/connectDb";
 import config from "config";
-
+import router from "./router";
 const app = express();
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 async function startServer() {
   try {
@@ -18,6 +14,8 @@ async function startServer() {
         "Example app listening on port" + ` http://localhost:${port}`
       );
     });
+
+    router(app);
   } catch (error) {
     console.log(error);
   }

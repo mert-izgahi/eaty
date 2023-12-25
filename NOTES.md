@@ -131,3 +131,17 @@ export async function getAllMenuItems(
   return res.send("All menu items");
 }
 ```
+
+#### Create router.ts
+
+in our src folder we will create new file and we will call it router.ts
+
+```js
+import { Express } from "express";
+
+export default function router(app: Express) {
+  app.get("/", (req, res) => {
+    res.send("Hello World!");
+  });
+}
+```
