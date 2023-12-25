@@ -1,5 +1,6 @@
 import express from "express";
 import { connectDb } from "./utils/connectDb";
+import config from "config";
 
 const app = express();
 
@@ -9,9 +10,13 @@ app.get("/", (req, res) => {
 
 async function startServer() {
   try {
-    await connectDb();
-    app.listen(3000, () => {
-      console.log("Example app listening on port http://localhost:3000!");
+    const port: number = config.get<number>("port");
+    const mongoUrl: string = config.get<string>("mongoUrl");
+    await connectDb(mongoUrl);
+    app.listen(port, () => {
+      console.log(
+        "Example app listening on port" + ` http://localhost:${port}`
+      );
     });
   } catch (error) {
     console.log(error);

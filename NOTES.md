@@ -57,3 +57,33 @@ async function startServer() {
 
 startServer();
 ```
+
+#### Setup Environment Vars
+
+create folder config and then file with static name default.ts inside config folder
+
+```js
+export default {
+  port: 5001,
+  mongoUrl: "mongodb://127.0.0.1:27017/eaty",
+};
+```
+
+and in index.ts we can modify startServer function
+
+```js
+async function startServer() {
+  try {
+    const port: number = config.get < number > "port";
+    const mongoUrl: string = config.get < string > "mongoUrl";
+    await connectDb(mongoUrl);
+    app.listen(port, () => {
+      console.log(
+        "Example app listening on port" + ` http://localhost:${port}`
+      );
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+```
