@@ -116,3 +116,18 @@ const menuItemSchema = new mongoose.Schema({
 
 export default mongoose.model < IMenuItem > ("MenuItem", menuItemSchema);
 ```
+
+#### Start Our Menu Item Controller
+
+in src folder create folder call it controllers and inside it new file with name menuItem.controller.ts, Now let's create first controller that we will use in api services
+
+```js
+import { Request, Response, NextFunction } from "express";
+export async function getAllMenuItems(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  return res.send("All menu items");
+}
+```
