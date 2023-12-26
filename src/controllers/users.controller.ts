@@ -35,6 +35,9 @@ export async function LoginUserController(
   if (!isCorrect) {
     throw new AuthenticationError("Invalid credentials, wrong password");
   }
+  const agent = req.get("user-agent") || "unknown";
+
+  await User.updateUser({ _id: userDoc._id }, { agent }, { new: true });
 
   const token = await userDoc.generateToken();
 

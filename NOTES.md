@@ -245,3 +245,26 @@ userSchema.methods.generateToken = function () {
 using bcrypt and mongoose middleware we will hash password before saving it to db
 
 ### Login Service
+```js
+export async function LoginUserController(
+  req: Request<{}, {}, { email: string; password: string }>,
+  res: Response
+) {
+  const { email, password } = req.body;
+  const userDoc = await User.getOneUserByEmail(email);
+
+  if (!userDoc) {
+    throw new AuthenticationError("Invalid credentials, user not found");
+  }
+
+  const isCorrect = await userDoc.comparePassword(password);
+
+  if (!isCorrect) {
+    throw new AuthenticationError("Invalid credentials, wrong password");
+  }
+
+  const token = await userDoc.generateToken();
+
+  return sendResponse(res, 200, "User logged in successfully", token);
+}
+```

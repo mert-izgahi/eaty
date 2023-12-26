@@ -12,7 +12,6 @@ export interface IUserSchema extends mongoose.Document {
   phone: string;
   image: string;
   paymentMethod: string;
-  token: string;
   agent: string;
   generateToken(): Promise<string>;
   comparePassword(password: string): Promise<boolean>;
@@ -25,7 +24,11 @@ export interface IUser extends Model<IUserSchema> {
   getOneUser(query: FilterQuery<IUserSchema>): Promise<IUserSchema>;
   getOneUserById(id: string): Promise<IUserSchema>;
   getOneUserByEmail(email: string): Promise<IUserSchema> | null;
-  updateUser(id: string, User: IUserSchema): Promise<IUserSchema>;
+  updateUser(
+    query: FilterQuery<IUserSchema>,
+    User: QueryOptions<IUserSchema>,
+    options: QueryOptions
+  ): Promise<IUserSchema>;
   deleteUser(query: FilterQuery<IUserSchema>): Promise<IUserSchema | null>;
 }
 
@@ -89,6 +92,11 @@ const userSchema = new mongoose.Schema({
       message: "Invalid payment method",
     },
   },
+
+  agent: {
+    type: String,
+    default: "unknown",
+  }
 });
 
 userSchema.statics.getUsers = async function (
@@ -123,13 +131,13 @@ userSchema.statics.getOneUserByEmail = async function (email: string) {
 };
 
 userSchema.statics.updateUser = async function (
-  id: string,
+  query: FilterQuery<IUserSchema>,
   User: IUserSchema,
   options: QueryOptions = { new: true }
 ) {
-  const user = await this.findByIdAndUpdate(id, User, options);
+  const user = await this.findOneAndUpdate(query, User, options);
   if (!user) {
-    throw new Error(`User with id ${id} not found`);
+    throw new BadRequestError(`User with query: ${query} not found`);
   }
   return user;
 };
@@ -163,7 +171,7 @@ userSchema.methods.generateToken = function () {
 userSchema.methods.comparePassword = async function (password: string) {
   const isMatch = await bcrypt.compare(password, this.password);
   return isMatch;
-}
+};
 
 // ########## USER MIDDLEWARES ##########
 userSchema.pre("save", async function (next) {
@@ -175,8 +183,6 @@ userSchema.pre("save", async function (next) {
   }
   next();
 });
-
-
 
 const User = mongoose.model<IUserSchema, IUser>("User", userSchema);
 
