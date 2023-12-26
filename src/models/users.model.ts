@@ -1,0 +1,131 @@
+import mongoose, { FilterQuery, Model, QueryOptions } from "mongoose";
+
+export interface IUserSchema extends mongoose.Document {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  address: string;
+  phone: string;
+  image: string;
+  paymentMethod: string;
+  token: string;
+}
+
+export interface IUser extends Model<IUserSchema> {
+  registerUser(User: IUserSchema): Promise<IUserSchema>;
+  loginUser(email: string, password: string): Promise<IUserSchema>;
+  getUsers(Query: FilterQuery<IUserSchema>): Promise<IUserSchema[]>;
+  getOneUser(id: string): Promise<IUserSchema>;
+  updateUser(id: string, User: IUserSchema): Promise<IUserSchema>;
+  deleteUser(query: FilterQuery<IUserSchema>): Promise<IUserSchema | null>;
+}
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, "Name is required"],
+    trim: true,
+    max: [256, "Name can not be more than 256 characters"],
+  },
+  email: {
+    type: String,
+    required: [true, "Email is required"],
+    trim: true,
+    max: [256, "Email can not be more than 256 characters"],
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: [true, "Password is required"],
+    trim: true,
+    max: [256, "Password can not be more than 256 characters"],
+  },
+  role: {
+    type: String,
+    required: [true, "Role is required"],
+    trim: true,
+    max: [256, "Role can not be more than 256 characters"],
+    enum: {
+      values: ["user", "admin"],
+      message: "Invalid role",
+    },
+  },
+
+  address: {
+    type: String,
+    required: [true, "Address is required"],
+    trim: true,
+    max: [256, "Address can not be more than 256 characters"],
+  },
+
+  phone: {
+    type: String,
+    required: [true, "Phone is required"],
+    trim: true,
+    max: [256, "Phone can not be more than 256 characters"],
+  },
+
+  image: {
+    type: String,
+    default: "image.jpg",
+  },
+
+  paymentMethod: {
+    type: String,
+    required: [true, "PaymentMethod is required"],
+    trim: true,
+    max: [256, "PaymentMethod can not be more than 256 characters"],
+    enum: {
+      values: ["cash", "card"],
+      message: "Invalid payment method",
+    },
+  },
+});
+
+userSchema.statics.getUsers = async function (
+  query: FilterQuery<IUserSchema> = {}
+) {
+  const users = await this.find(query);
+  return users;
+};
+
+userSchema.statics.getOneUser = async function (id: string) {
+  const user = await this.findById(id);
+  if (!user) {
+    throw new Error(`User with id ${id} not found`);
+  }
+  return user;
+};
+
+userSchema.statics.updateUser = async function (
+  id: string,
+  User: IUserSchema,
+  options: QueryOptions = { new: true }
+) {
+  const user = await this.findByIdAndUpdate(id, User, options);
+  if (!user) {
+    throw new Error(`User with id ${id} not found`);
+  }
+  return user;
+};
+
+userSchema.statics.deleteUser = async function (
+  query: FilterQuery<IUserSchema>
+) {
+  const user = await this.findByIdAndDelete(query);
+  if (!user) {
+    throw new Error(`User with id ${query} not found`);
+  }
+  return user;
+};
+
+
+userSchema.statics.registerUser = async function (User: IUserSchema) {
+  const user = await this.create(User);
+  return user;
+}
+
+const User = mongoose.model<IUserSchema, IUser>("User", userSchema);
+
+export default User;
