@@ -15,6 +15,7 @@ export interface IUserSchema extends mongoose.Document {
   token: string;
   agent: string;
   generateToken(): Promise<string>;
+  comparePassword(password: string): Promise<boolean>;
 }
 
 export interface IUser extends Model<IUserSchema> {
@@ -159,6 +160,10 @@ userSchema.methods.generateToken = function () {
   }
 };
 
+userSchema.methods.comparePassword = async function (password: string) {
+  const isMatch = await bcrypt.compare(password, this.password);
+  return isMatch;
+}
 
 // ########## USER MIDDLEWARES ##########
 userSchema.pre("save", async function (next) {

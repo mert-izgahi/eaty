@@ -1,6 +1,7 @@
 import { CastError } from "mongoose";
 import { BadRequestError } from "../errors/BadRequest.error";
 import NotFoundError from "../errors/NotFound.error";
+import AuthenticationError from "../errors/Authentication.error";
 
 export default function errorHandlerMiddleware(
   error: Error,
@@ -43,7 +44,13 @@ export default function errorHandlerMiddleware(
       name: error.name,
     });
   }
-
+  if (error instanceof AuthenticationError) {
+    return res.status(error.status).json({
+      state: "error",
+      message: error.message,
+      name: error.name,
+    });
+  }
   if (error.name === "TypeError") {
     const { stack } = error;
     return res.status(500).json({

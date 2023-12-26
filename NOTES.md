@@ -242,4 +242,6 @@ userSchema.methods.generateToken = function () {
 
 
 #### Hash Password and keep it secret
+using bcrypt and mongoose middleware we will hash password before saving it to db
 
+### Login Service

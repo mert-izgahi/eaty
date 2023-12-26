@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User, { IUserSchema } from "../models/users.model";
 import sendResponse from "../utils/sendResponse";
+import AuthenticationError from "../errors/Authentication.error";
 
 export async function registerUserController(
   req: Request<{}, {}, IUserSchema>,
@@ -10,12 +11,34 @@ export async function registerUserController(
 
   const userDoc = await User.getOneUserByEmail(req.body.email!);
   if (userDoc) {
-    return sendResponse(res, 400, "User already exists", null);
+    throw new AuthenticationError("User already exists");
   }
 
   const user = await User.createUser(body);
   const token = await user.generateToken();
   return sendResponse(res, 201, "User created successfully", token);
+}
+
+export async function LoginUserController(
+  req: Request<{}, {}, { email: string; password: string }>,
+  res: Response
+) {
+  const { email, password } = req.body;
+  const userDoc = await User.getOneUserByEmail(email);
+
+  if (!userDoc) {
+    throw new AuthenticationError("Invalid credentials, user not found");
+  }
+
+  const isCorrect = await userDoc.comparePassword(password);
+
+  if (!isCorrect) {
+    throw new AuthenticationError("Invalid credentials, wrong password");
+  }
+
+  const token = await userDoc.generateToken();
+
+  return sendResponse(res, 200, "User logged in successfully", token);
 }
 
 export async function getUsersController(req: Request, res: Response) {
