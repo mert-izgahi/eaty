@@ -3,8 +3,10 @@ import { connectDb } from "./utils/connectDb";
 import config from "config";
 import router from "./router";
 import errorHandlerMiddleware from "./middlewares/errorHandler.middleware";
+import deserializerUser from "./middlewares/deserializerUser.middleware";
 const app = express();
 app.use(express.json());
+app.use(deserializerUser);
 async function startServer() {
   try {
     const port: number = config.get<number>("port");

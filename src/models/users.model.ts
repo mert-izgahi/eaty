@@ -102,7 +102,7 @@ const userSchema = new mongoose.Schema({
 userSchema.statics.getUsers = async function (
   query: FilterQuery<IUserSchema> = {}
 ) {
-  const users = await this.find(query);
+  const users = await this.find(query).select("-password");
   return users;
 };
 
@@ -117,7 +117,7 @@ userSchema.statics.getOneUser = async function (
 };
 
 userSchema.statics.getOneUserById = async function (id: string) {
-  const user = await this.findById(id);
+  const user = await this.findById(id).select("-password");
   if (!user) {
     throw new BadRequestError(`User with id ${id} not found`);
   }
