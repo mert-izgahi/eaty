@@ -60,3 +60,13 @@ export async function getOneUserController(req: Request, res: Response) {
 
   return sendResponse(res, 200, "User fetched successfully", user);
 }
+
+export async function updateOneUserController(
+  req: Request<{ id?: string }>,
+  res: Response
+) {
+  const { id } = req.params;
+  const body = req.body;
+  const user = await User.updateUser({ _id: id }, body , { new: true });
+  return sendResponse(res, 200, "User updated successfully", user);
+}

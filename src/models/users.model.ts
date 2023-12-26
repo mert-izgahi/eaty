@@ -51,6 +51,7 @@ const userSchema = new mongoose.Schema({
     required: [true, "Password is required"],
     trim: true,
     max: [256, "Password can not be more than 256 characters"],
+    select: false,
   },
   role: {
     type: String,
@@ -99,10 +100,12 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+// ########## USER STATIC METHODS ##########
+
 userSchema.statics.getUsers = async function (
   query: FilterQuery<IUserSchema> = {}
 ) {
-  const users = await this.find(query).select("-password");
+  const users = await this.find(query);
   return users;
 };
 
@@ -117,16 +120,16 @@ userSchema.statics.getOneUser = async function (
 };
 
 userSchema.statics.getOneUserById = async function (id: string) {
-  const user = await this.findById(id).select("-password");
+  const user = await this.findById(id);
   if (!user) {
     throw new BadRequestError(`User with id ${id} not found`);
   }
   return user;
 };
 
-// ########## USER STATIC METHODS ##########
+
 userSchema.statics.getOneUserByEmail = async function (email: string) {
-  const user = await this.findOne({ email });
+  const user = await this.findOne({ email }).select("+password");
   return user ? user : null;
 };
 
