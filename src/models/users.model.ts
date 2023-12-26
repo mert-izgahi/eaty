@@ -1,5 +1,6 @@
 import mongoose, { FilterQuery, Model, QueryOptions } from "mongoose";
 import { sign, verify } from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import config from "config";
 import { BadRequestError } from "../errors/BadRequest.error";
 export interface IUserSchema extends mongoose.Document {
@@ -157,6 +158,19 @@ userSchema.methods.generateToken = function () {
     throw new BadRequestError("Could not generate token");
   }
 };
+
+
+// ########## USER MIDDLEWARES ##########
+userSchema.pre("save", async function (next) {
+  const user = this;
+  if (user.isModified("password")) {
+    const saltRounds = config.get<number>("saltRounds");
+    const salt = await bcrypt.genSalt(saltRounds);
+    user.password = await bcrypt.hash(user.password, salt);
+  }
+  next();
+});
+
 
 
 const User = mongoose.model<IUserSchema, IUser>("User", userSchema);

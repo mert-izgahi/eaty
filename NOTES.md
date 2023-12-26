@@ -239,3 +239,7 @@ userSchema.methods.generateToken = function () {
   }
 };
 ```
+
+
+#### Hash Password and keep it secret
+
