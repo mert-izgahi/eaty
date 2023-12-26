@@ -7,8 +7,15 @@ export async function registerUserController(
   res: Response
 ) {
   const body = req.body;
-  const user = await User.registerUser(body);
-  return sendResponse(res, 201, "User created successfully", user);
+
+  const userDoc = await User.getOneUserByEmail(req.body.email!);
+  if (userDoc) {
+    return sendResponse(res, 400, "User already exists", null);
+  }
+
+  const user = await User.createUser(body);
+  const token = await user.generateToken();
+  return sendResponse(res, 201, "User created successfully", token);
 }
 
 export async function getUsersController(req: Request, res: Response) {
@@ -18,6 +25,12 @@ export async function getUsersController(req: Request, res: Response) {
 
 export async function getOneUserController(req: Request, res: Response) {
   const { id } = req.params;
-  const user = await User.getOneUser(id!);
+
+  const user = await User.getOneUserById(id);
+
+  if (!user) {
+    return sendResponse(res, 404, "User not found", null);
+  }
+
   return sendResponse(res, 200, "User fetched successfully", user);
 }

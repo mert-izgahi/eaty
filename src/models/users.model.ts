@@ -1,5 +1,7 @@
 import mongoose, { FilterQuery, Model, QueryOptions } from "mongoose";
-
+import { sign, verify } from "jsonwebtoken";
+import config from "config";
+import { BadRequestError } from "../errors/BadRequest.error";
 export interface IUserSchema extends mongoose.Document {
   name: string;
   email: string;
@@ -10,13 +12,17 @@ export interface IUserSchema extends mongoose.Document {
   image: string;
   paymentMethod: string;
   token: string;
+  agent: string;
+  generateToken(): Promise<string>;
 }
 
 export interface IUser extends Model<IUserSchema> {
-  registerUser(User: IUserSchema): Promise<IUserSchema>;
+  createUser(User: IUserSchema): Promise<IUserSchema>;
   loginUser(email: string, password: string): Promise<IUserSchema>;
   getUsers(Query: FilterQuery<IUserSchema>): Promise<IUserSchema[]>;
-  getOneUser(id: string): Promise<IUserSchema>;
+  getOneUser(query: FilterQuery<IUserSchema>): Promise<IUserSchema>;
+  getOneUserById(id: string): Promise<IUserSchema>;
+  getOneUserByEmail(email: string): Promise<IUserSchema> | null;
   updateUser(id: string, User: IUserSchema): Promise<IUserSchema>;
   deleteUser(query: FilterQuery<IUserSchema>): Promise<IUserSchema | null>;
 }
@@ -90,12 +96,28 @@ userSchema.statics.getUsers = async function (
   return users;
 };
 
-userSchema.statics.getOneUser = async function (id: string) {
-  const user = await this.findById(id);
+userSchema.statics.getOneUser = async function (
+  query: FilterQuery<IUserSchema>
+) {
+  const user = await this.findOne(query);
   if (!user) {
-    throw new Error(`User with id ${id} not found`);
+    throw new BadRequestError(`User with id ${query} not found`);
   }
   return user;
+};
+
+userSchema.statics.getOneUserById = async function (id: string) {
+  const user = await this.findById(id);
+  if (!user) {
+    throw new BadRequestError(`User with id ${id} not found`);
+  }
+  return user;
+};
+
+// ########## USER STATIC METHODS ##########
+userSchema.statics.getOneUserByEmail = async function (email: string) {
+  const user = await this.findOne({ email });
+  return user ? user : null;
 };
 
 userSchema.statics.updateUser = async function (
@@ -119,12 +141,23 @@ userSchema.statics.deleteUser = async function (
   }
   return user;
 };
-
-
-userSchema.statics.registerUser = async function (User: IUserSchema) {
+userSchema.statics.createUser = async function (User: IUserSchema) {
   const user = await this.create(User);
   return user;
-}
+};
+
+// ########## USER METHODS ##########
+userSchema.methods.generateToken = function () {
+  try {
+    const token = sign({ id: this._id }, config.get<string>("jwtPrivateKey"), {
+      expiresIn: config.get<string>("jwtExpireIn"),
+    });
+    return token;
+  } catch (error) {
+    throw new BadRequestError("Could not generate token");
+  }
+};
+
 
 const User = mongoose.model<IUserSchema, IUser>("User", userSchema);
 

@@ -212,7 +212,30 @@ export default function errorHandlerMiddleware(
   });
 }
 ```
+
 complete menuItems model and controller, and error handler middleware.
 
 #### Start with User Model:
+
 create user model and user controller also router for it
+
+#### JWT and generate tokens
+
+we will create new user schema method to generate token and return it in response
+
+```js
+userSchema.methods.generateToken = function () {
+  try {
+    const token = sign(
+      { id: this._id },
+      config.get < string > "jwtPrivateKey",
+      {
+        expiresIn: config.get < string > "jwtExpireIn",
+      }
+    );
+    return token;
+  } catch (error) {
+    throw new BadRequestError("Could not generate token");
+  }
+};
+```
