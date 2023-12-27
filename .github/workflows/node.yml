@@ -18,6 +18,8 @@ jobs:
           node-version: "20"
 
       - run: npm install
+      - name: Run tests
+        run: npm run test
       - run: npm start
         env:
           stripeBackendKey: ${{ secrets.stripeBackendKey }}

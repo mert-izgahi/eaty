@@ -15,6 +15,8 @@ export default async function deserializerUser(
       return next();
     }
     const payload = verify(token, config.get<string>("jwtPrivateKey"));
+    
+    
     if (!payload) {
       return next();
     }

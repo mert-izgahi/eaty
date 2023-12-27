@@ -301,3 +301,14 @@ export default async function deserializerUser(
   }
 }
 ```
+AFTER BUILDING ALL CONTROLLERS AND ROUTS WE WILL START WITH TESTS
+#### TESTS
+
+- `npm install --save-dev jest @types/jest ts-jest supertest @types/supertest`
+
+- `npx ts-jest config:init`
+
+
+- if we want to update tests automatically when files changes "test": "jest --watchAll",
+
+- to set node env export NODE_ENV=test

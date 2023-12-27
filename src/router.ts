@@ -38,7 +38,7 @@ export default function router(app: Express) {
   app.get("/api/v1/users/:id", withAuth, asyncWrapper(getOneUserController));
   app.put("/api/v1/users/:id", withAuth, asyncWrapper(updateOneUserController));
   // products routes
-  app.get("/api/v1/products", withAuth, asyncWrapper(getProductsController));
+  app.get("/api/v1/products", asyncWrapper(getProductsController));
   app.get("/api/v1/products/:id", asyncWrapper(getOneProductController));
   app.post("/api/v1/products", withAuth, asyncWrapper(createProductController));
   app.delete(

@@ -60,6 +60,13 @@ export default function errorHandlerMiddleware(
       stack: stack?.split("\n"),
     });
   }
+  if(error.name === "JsonWebTokenError"){
+    return res.status(401).json({
+      state: "error",
+      message: error.message,
+      name: error.name,
+    });
+  }
   return res.status(500).json({
     state: "error",
     message: error.message,
