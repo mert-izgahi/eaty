@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
-import config from "config";
+import config from "../../configs";
 
 export default async function deserializerUser(
   req: Request,
@@ -14,11 +14,11 @@ export default async function deserializerUser(
     if (!token) {
       return next();
     }
-    const key = config.get<string>("jwtPrivateKey");
+    const key = config.jwtPrivateKey;
     if (!key) {
       return next();
     }
-    
+
     const payload = verify(token, key);
 
     if (!payload) {

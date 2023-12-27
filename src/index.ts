@@ -1,10 +1,13 @@
-import config from "config";
+import config from "../configs";
 import { connectDb } from "./utils/connectDb";
 import createServer from "./utils/createServer";
 
 const app = createServer();
-const port: number = config.get<number>("port");
-const mongoUrl: string = config.get<string>("mongoUrl");
+const port: number = config.port || 3000;
+const mongoUrl: string = config.mongoUrl || "";
+
+console.log("mongoUrl", mongoUrl);
+
 async function startServer() {
   try {
     app.listen(port, async () => {

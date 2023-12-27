@@ -1,7 +1,7 @@
 import mongoose, { FilterQuery, Model, QueryOptions } from "mongoose";
-import { sign, verify } from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
+import config from "../../configs";
 import bcrypt from "bcrypt";
-import config from "config";
 import { BadRequestError } from "../errors/BadRequest.error";
 export interface IUserSchema extends mongoose.Document {
   name: string;
@@ -161,8 +161,13 @@ userSchema.statics.createUser = async function (User: IUserSchema) {
 // ########## USER METHODS ##########
 userSchema.methods.generateToken = function () {
   try {
-    const token = sign({ id: this._id }, config.get<string>("jwtPrivateKey"), {
-      expiresIn: config.get<string>("jwtExpireIn"),
+    const jwtPrivateKey = config.jwtPrivateKey;
+    const jwtExpireIn :string = config.jwtExpiresIn || "1d";
+    if (!jwtPrivateKey || !jwtExpireIn) {
+      throw new Error("JWT config not found");
+    }
+    const token = sign({ id: this._id }, jwtPrivateKey, {
+      expiresIn: jwtExpireIn,
     });
     return token;
   } catch (error) {
@@ -179,7 +184,7 @@ userSchema.methods.comparePassword = async function (password: string) {
 userSchema.pre("save", async function (next) {
   const user = this;
   if (user.isModified("password")) {
-    const saltRounds = config.get<number>("saltRounds");
+    const saltRounds: number = config.saltRounds || 10;
     const salt = await bcrypt.genSalt(saltRounds);
     user.password = await bcrypt.hash(user.password, salt);
   }

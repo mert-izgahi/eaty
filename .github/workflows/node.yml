@@ -9,8 +9,17 @@ jobs:
   build:
     env:
       CI: true
-      MONGODB_URI: mongodb://localhost:27017/storeDb
-      PORT : 5001
+      MONGO_URL : ${{ secrets.MONGO_URL }}
+      PORT : ${{ secrets.PORT }}
+      JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+      JWT_EXPIRE_IN: ${{ secrets.JWT_EXPIRE_IN }}
+      SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
+      CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+      CLOUDINARY_FOLDER: ${{ secrets.CLOUDINARY_FOLDER }}
+      CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+      CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+      STRIPE_FRONTEND_KEY: ${{ secrets.STRIPE_FRONTEND_KEY }}
+      STRIPE_BACKEND_KEY: ${{ secrets.STRIPE_BACKEND_KEY }}
     strategy:
       matrix:
         node-version: ["18.x", "20.x"]
@@ -32,6 +41,5 @@ jobs:
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
       - run: npm install
-      - run: npm run dev
       - name: Run tests
         run: npm test
