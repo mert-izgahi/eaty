@@ -2,16 +2,13 @@ import supertest from "supertest";
 import createServer from "../utils/createServer";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import Product from "../models/product.model";
-import config from "config";
 
 const app = createServer();
 beforeAll(async () => {
   const mongoServer = await MongoMemoryServer.create();
   await mongoose.connect(mongoServer.getUri());
 });
-const token = config.get<string>("token");
-
+let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OGFiYzc5YzBkNTNlMGRkMjI2OTYyZCIsImlhdCI6MTcwMzU5Mzg0NSwiZXhwIjoxNzA0MTk4NjQ1fQ.HL3iTirlw6cR7cDc4kJhgTRtMgwK0ubDBGHKHX8DLmk" // JUST FOR TESTING
 let createdProduct: any = null;
 let productPayload = {
   name: "Product 1",
