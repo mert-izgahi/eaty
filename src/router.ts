@@ -17,11 +17,14 @@ import {
 import withAuth from "./middlewares/withAuth.middleware";
 import {
   createOrderController,
+  createPaymentIntentController,
   deleteOneOrderController,
   getOneOrderController,
   getOrdersController,
   updateOneOrderController,
 } from "./controllers/orders.controller";
+import { createPaymentIntent } from "./utils/stripe";
+import sendResponse from "./utils/sendResponse";
 
 export default function router(app: Express) {
   app.get("/api/v1/test-api", (req, res) => {
@@ -53,6 +56,11 @@ export default function router(app: Express) {
   app.get("/api/v1/orders", withAuth, asyncWrapper(getOrdersController));
   app.get("/api/v1/orders/:id", withAuth, asyncWrapper(getOneOrderController));
   app.post("/api/v1/orders", withAuth, asyncWrapper(createOrderController));
+  app.post(
+    "/api/v1/orders/:id",
+    withAuth,
+    asyncWrapper(createPaymentIntentController)
+  );
   app.put("api/v1/orders", asyncWrapper(updateOneOrderController));
   app.delete("api/v1/orders/:id", asyncWrapper(deleteOneOrderController));
 }

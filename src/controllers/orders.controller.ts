@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import sendResponse from "../utils/sendResponse";
 import Order, { IOrderSchema } from "../models/order.model";
+import { BadRequestError } from "../errors/BadRequest.error";
 
 export async function getOrdersController(req: Request, res: Response) {
   const orders = await Order.getOrders({});
@@ -13,7 +14,7 @@ export async function getOneOrderController(
   res: Response
 ) {
   const { id } = req.params;
-  const order = await Order.getOneOrder(id!);
+  const order = await Order.getOneOrder({ _id: id });
   return sendResponse(res, 200, "Order fetched successfully", order);
 }
 
@@ -23,8 +24,8 @@ export async function createOrderController(
 ) {
   const user = res.locals.user.id;
   const args = { ...req.body, user } as IOrderSchema;
-    console.log(args);
-    
+  console.log(args);
+
   const order = await Order.createOneOrder(args);
   return sendResponse(res, 201, "Order created successfully", order);
 }
@@ -47,4 +48,23 @@ export async function updateOneOrderController(
     new: true,
   });
   return sendResponse(res, 200, "Order updated successfully", order);
+}
+
+export async function createPaymentIntentController(
+  req: Request<{ id?: string }>,
+  res: Response
+) {
+  const order = await Order.getOneOrder({ _id: req.params.id });
+  
+  const paymentIntent = await order.createPaymentIntent();
+
+  const { client_secret } = paymentIntent;
+
+  if (!client_secret) {
+    throw new BadRequestError("Payment intent not created");
+  }
+
+  return sendResponse(res, 200, "Payment intent created successfully", {
+    clientSecret: client_secret,
+  });
 }

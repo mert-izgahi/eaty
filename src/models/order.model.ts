@@ -1,5 +1,6 @@
 import mongoose, { FilterQuery, Model, QueryOptions } from "mongoose";
 import NotFoundError from "../errors/NotFound.error";
+import { createPaymentIntent } from "../utils/stripe";
 
 interface IOrderItem {
   name: string;
@@ -46,6 +47,8 @@ export interface IOrderSchema extends mongoose.Document {
   isDelivered: boolean;
   paidAt: Date;
   deliveredAt: Date;
+
+  createPaymentIntent(): Promise<{ client_secret: string }>;
 }
 
 const orderSchema = new mongoose.Schema({
@@ -86,7 +89,7 @@ const orderSchema = new mongoose.Schema({
 
 export interface IOrder extends Model<IOrderSchema> {
   getOrders(Query: FilterQuery<IOrderSchema>): Promise<IOrderSchema[]>;
-  getOneOrder(id: string): Promise<IOrderSchema>;
+  getOneOrder(query: FilterQuery<IOrderSchema>): Promise<IOrderSchema>;
   createOneOrder(Order: IOrderSchema): Promise<IOrderSchema>;
   deleteOneOrder(
     query: FilterQuery<IOrderSchema>
@@ -134,14 +137,19 @@ orderSchema.statics.updateOneOrder = async function (
   query: FilterQuery<IOrderSchema>,
   Order: IOrderSchema,
   options: QueryOptions
-){
+) {
   const order = await this.findByIdAndUpdate(query, Order, options);
   if (!order) {
     throw new NotFoundError(`Order with id ${query} not found`);
   }
   return order;
-}
+};
 
+orderSchema.methods.createPaymentIntent = async function () {
+  const { totalPrice } = this;
+  const paymentIntent = await createPaymentIntent(totalPrice);
+  return paymentIntent;
+};
 const Order = mongoose.model<IOrderSchema, IOrder>("Order", orderSchema);
 
-export default Order
+export default Order;
