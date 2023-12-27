@@ -7,6 +7,7 @@ import fileUpload from "express-fileupload";
 import errorHandlerMiddleware from "./middlewares/errorHandler.middleware";
 import deserializerUser from "./middlewares/deserializerUser.middleware";
 
+
 const app = express();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,6 +29,8 @@ async function startServer() {
 
     const mongoUrl: string = config.get<string>("mongoUrl");
     await connectDb(mongoUrl);
+
+    
     app.listen(port, () => {
       console.log(
         "Example app listening on port" + ` http://localhost:${port}`

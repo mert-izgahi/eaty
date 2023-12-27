@@ -21,7 +21,11 @@ export async function createOrderController(
   req: Request<{}, {}, IOrderSchema>,
   res: Response
 ) {
-  const order = await Order.createOneOrder(req.body);
+  const user = res.locals.user.id;
+  const args = { ...req.body, user } as IOrderSchema;
+    console.log(args);
+    
+  const order = await Order.createOneOrder(args);
   return sendResponse(res, 201, "Order created successfully", order);
 }
 

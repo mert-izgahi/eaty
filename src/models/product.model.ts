@@ -58,7 +58,7 @@ const productSchema = new mongoose.Schema({
     trim: true,
     max: [256, "Category can not be more than 256 characters"],
     enum: {
-      values: ["starter", "main course", "dessert"],
+      values: ["Drones", "Tablets", "Laptops"],
       message: "Invalid category",
     },
   },
