@@ -15,6 +15,7 @@ import {
   updateOneUserController,
 } from "./controllers/users.controller";
 import withAuth from "./middlewares/withAuth.middleware";
+
 export default function router(app: Express) {
   app.get("/api/v1/test-api", (req, res) => {
     res.send("👍 Api is working");

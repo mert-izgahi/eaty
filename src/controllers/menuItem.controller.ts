@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import MenuItem, { IMenuItemSchema } from "../models/menuItem.model";
 import sendResponse from "../utils/sendResponse";
+import cloudinaryUpload from "../utils/cloudinary";
 
 export async function getMenuItemsController(
   req: Request<{ category?: string }, {}, {}>,
@@ -29,6 +30,11 @@ export async function createMenuItemController(
   res: Response
 ) {
   const body = req.body;
+  const files = req.files;
+  const { photo }: any = files;
+  if (photo) {
+    body.image = await cloudinaryUpload(photo);
+  }
   const menuItem = await MenuItem.createOneItem(body);
   return sendResponse(res, 201, "Menu item created successfully", menuItem);
 }

@@ -97,7 +97,7 @@ const userSchema = new mongoose.Schema({
   agent: {
     type: String,
     default: "unknown",
-  }
+  },
 });
 
 // ########## USER STATIC METHODS ##########
@@ -126,7 +126,6 @@ userSchema.statics.getOneUserById = async function (id: string) {
   }
   return user;
 };
-
 
 userSchema.statics.getOneUserByEmail = async function (email: string) {
   const user = await this.findOne({ email }).select("+password");

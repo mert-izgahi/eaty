@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User, { IUserSchema } from "../models/users.model";
 import sendResponse from "../utils/sendResponse";
 import AuthenticationError from "../errors/Authentication.error";
+import cloudinaryUpload from "../utils/cloudinary";
 
 export async function registerUserController(
   req: Request<{}, {}, IUserSchema>,
@@ -67,6 +68,15 @@ export async function updateOneUserController(
 ) {
   const { id } = req.params;
   const body = req.body;
-  const user = await User.updateUser({ _id: id }, body , { new: true });
+  const files = req.files;
+  const { photo }: any = files;
+  // if photo is not empty, upload it to cloudinary and update body
+  if (photo) {
+    const { secure_url } = await cloudinaryUpload(photo.tempFilePath);
+    body.image = secure_url;
+  }
+
+  
+  const user = await User.updateUser({ _id: id }, body, { new: true });
   return sendResponse(res, 200, "User updated successfully", user);
 }
