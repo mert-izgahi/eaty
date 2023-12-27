@@ -20,7 +20,7 @@ jobs:
       - run: npm install
       - run: npm start
         env:
-          Node_ENV: test
+          Node_ENV: production
           PORT : ${{ secrets.PORT }}
           SUPPRESS_NO_CONFIG_WARNING: true
 
