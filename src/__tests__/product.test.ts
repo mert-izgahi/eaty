@@ -2,11 +2,19 @@ import supertest from "supertest";
 import createServer from "../utils/createServer";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-
+import { connectDb } from "../utils/connectDb";
+import config from "../../configs";
 const app = createServer();
+
 beforeAll(async () => {
-  const mongoServer = await MongoMemoryServer.create();
-  await mongoose.connect(mongoServer.getUri());
+  //   const mongoServer = await MongoMemoryServer.create();
+  //   await mongoose.connect(mongoServer.getUri());
+  const mongoUrl = config.mongoUrl;
+  if (!mongoUrl) {
+    throw new Error("Mongo URL not found");
+  }
+
+  await connectDb(mongoUrl);
 });
 
 let createdProduct: any = null;
@@ -19,7 +27,6 @@ let productPayload = {
 afterAll(async () => {
   await mongoose.disconnect();
   await mongoose.connection.close();
-
   createdProduct = null;
 });
 
