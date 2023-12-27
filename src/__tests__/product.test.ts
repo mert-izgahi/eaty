@@ -33,7 +33,6 @@ describe("Products Controller", () => {
           .send(productPayload);
 
         createdProduct = await response.body.data; // Store data after awaiting response
-        console.log(response.body);
         expect(response.status).toBe(401);
         expect(response.body.state).toEqual("error");
         expect(createdProduct).toBeUndefined(); // Add an assertion for the created product
