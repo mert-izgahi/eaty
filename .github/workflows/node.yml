@@ -21,7 +21,7 @@ jobs:
       - run: npm start
         env:
           Node_ENV: production
-          PORT : ${{ secrets.PORT }}
+          PORT : 5001
           SUPPRESS_NO_CONFIG_WARNING: true
 
       - name: Run tests
