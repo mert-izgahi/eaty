@@ -9,10 +9,14 @@ jobs:
   build:
     env:
       CI: true
+      MONGODB_URI: mongodb://localhost:27017/storeDb
     strategy:
       matrix:
         node-version: ["14.x", "16.x", "18.x", "20.x"]
+        mongodb-version: ["5.0", "6.0", "7.0"]
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -22,6 +26,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Use MongoDB Action
+        uses: supercharge/mongodb-github-action@1.8.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
       - run: npm install
       - run: npm run dev
       - name: Run tests
