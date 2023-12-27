@@ -7,22 +7,22 @@ on:
 
 jobs:
   build:
+    env:
+      CI: true
+    strategy:
+      matrix:
+        node-version: ["14.x", "16.x", "18.x", "20.x"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node v20
+      - name: Setup Node version ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: ${{ matrix.node-version }}
 
       - run: npm install
-      - run: npm start
-        env:
-          Node_ENV: production
-          PORT : 5001
-          SUPPRESS_NO_CONFIG_WARNING: true
-
+      - run: npm run dev
       - name: Run tests
         run: npm test
