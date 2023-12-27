@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dbSeeder": "ts-node src/utils/seedDb.ts",
     "test": "jest --detectOpenHandles",
-    "db:seed": "ts-node src/utils/seedDb.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "start": "ts-node src/index.ts"
   },
