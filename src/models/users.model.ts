@@ -1,7 +1,7 @@
 import mongoose, { FilterQuery, Model, QueryOptions } from "mongoose";
 import { sign } from "jsonwebtoken";
 import config from "../configs";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { BadRequestError } from "../errors/BadRequest.error";
 export interface IUserSchema extends mongoose.Document {
   name: string;
@@ -162,7 +162,7 @@ userSchema.statics.createUser = async function (User: IUserSchema) {
 userSchema.methods.generateToken = function () {
   try {
     const jwtPrivateKey = config.jwtPrivateKey;
-    const jwtExpireIn :string = config.jwtExpiresIn || "1d";
+    const jwtExpireIn: string = config.jwtExpiresIn || "1d";
     if (!jwtPrivateKey || !jwtExpireIn) {
       throw new Error("JWT config not found");
     }
