@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
-import config from "../../configs";
+import config from "../configs";
 
 export default async function deserializerUser(
   req: Request,

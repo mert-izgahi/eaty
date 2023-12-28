@@ -1,6 +1,6 @@
 import mongoose, { FilterQuery, Model, QueryOptions } from "mongoose";
 import { sign } from "jsonwebtoken";
-import config from "../../configs";
+import config from "../configs";
 import bcrypt from "bcrypt";
 import { BadRequestError } from "../errors/BadRequest.error";
 export interface IUserSchema extends mongoose.Document {

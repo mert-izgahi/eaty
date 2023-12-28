@@ -41,8 +41,8 @@ describe("Products Controller", () => {
         .send(userPayload);
 
       token = await response.body.data;
-
-      expect(response.status).toBe(201);
+      const status = await response.status;
+      expect(status).toBe(201);
     });
   });
   describe("POST /login", () => {
@@ -107,5 +107,5 @@ describe("Products Controller", () => {
         .set("Authorization", `Bearer ${token}`);
       expect(response.status).toBe(200);
     });
-  })
+  });
 });

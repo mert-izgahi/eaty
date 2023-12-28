@@ -1,4 +1,4 @@
-import config from "../configs";
+import config from "./configs";
 import { connectDb } from "./utils/connectDb";
 import createServer from "./utils/createServer";
 

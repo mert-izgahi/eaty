@@ -3,7 +3,6 @@ import createServer from "../utils/createServer";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 
-
 const app = createServer();
 
 let createdUser: any = null;
@@ -31,9 +30,9 @@ afterAll(async () => {
 describe("Users Controller", () => {
   describe("POST /register", () => {
     it("should return token with status code 201", async () => {
-      const response = await supertest(app).post("/api/v1/auth/register").send(
-        userPayload
-      );
+      const response = await supertest(app)
+        .post("/api/v1/auth/register")
+        .send(userPayload);
       expect(response.status).toBe(201);
     });
   });
@@ -53,7 +52,7 @@ describe("Users Controller", () => {
         password: "wrong-password",
       });
       expect(response.status).toBe(401);
-    })
+    });
 
     it("should return error with status code 401", async () => {
       const response = await supertest(app).post("/api/v1/auth/login").send({
@@ -61,6 +60,6 @@ describe("Users Controller", () => {
         password: userPayload.password,
       });
       expect(response.status).toBe(401);
-    })
-  })
+    });
+  });
 });

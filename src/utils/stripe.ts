@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import config from "../../configs";
+import config from "../configs";
 
 export async function createPaymentIntent(amount: number) {
   const stripeKey: string | undefined = config?.stripeFrontendKey;

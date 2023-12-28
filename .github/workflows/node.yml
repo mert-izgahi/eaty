@@ -9,8 +9,8 @@ jobs:
   build:
     env:
       CI: true
-      MONGO_URL : ${{ secrets.MONGO_URL }}
-      PORT : ${{ secrets.PORT }}
+      MONGO_URL: ${{ secrets.MONGO_URL }}
+      PORT: ${{ secrets.PORT }}
       JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
       JWT_EXPIRE_IN: ${{ secrets.JWT_EXPIRE_IN }}
       SALT_ROUNDS: ${{ secrets.SALT_ROUNDS }}
@@ -41,6 +41,8 @@ jobs:
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
       - run: npm install
-
+      - name: build
+        run: npm run build
+        
       - name: Run tests
         run: npm test

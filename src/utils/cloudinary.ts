@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import config from "../../configs";
+import config from "../configs";
 
 export default function cloudinaryUpload(tempPath: string): Promise<any> {
   // Configure cloudinary storage with the credentials

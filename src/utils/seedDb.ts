@@ -1,7 +1,7 @@
 import Product from "../models/product.model";
 import User from "../models/users.model";
 import { connectDb } from "./connectDb";
-import config from "../../configs";
+import config from "../configs";
 const products = [
   {
     name: "Protocol Drone - Dura HD Drone",
