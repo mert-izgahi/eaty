@@ -1,0 +1,27 @@
+.cartFlex {
+    display: flex;
+    padding: var(--mantine-spacing-xs);
+    gap: var(--mantine-spacing-md);
+
+    .cartImage {
+        height: 80px;
+        width: 80px;
+    }
+
+    .cartStack {
+        gap: 3px;
+        flex: 1;
+        
+        .cartText {
+            font-size: 14px;
+            width: 150px;
+        }
+
+        .cartFlexBtn {
+            gap: var(--mantine-spacing-xs);
+        }
+    }
+    .cartBtnStack{
+        gap: 2px;
+    }
+}

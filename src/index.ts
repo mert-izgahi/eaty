@@ -6,7 +6,7 @@ const app = createServer();
 const port: number = config.port || 3000;
 const mongoUrl: string = config.mongoUrl || "";
 
-console.log("mongoUrl", mongoUrl);
+
 
 async function startServer() {
   try {

@@ -13,11 +13,12 @@ import {
   getUsersController,
   getOneUserController,
   updateOneUserController,
+  getCurrentUserController,
 } from "./controllers/users.controller";
 import withAuth from "./middlewares/withAuth.middleware";
 import {
   createOrderController,
-  createPaymentIntentController,
+  createStripeCheckoutSessionController,
   deleteOneOrderController,
   getOneOrderController,
   getOrdersController,
@@ -34,6 +35,11 @@ export default function router(app: Express) {
   // user routes
   app.post("/api/v1/auth/register", asyncWrapper(registerUserController));
   app.post("/api/v1/auth/login", asyncWrapper(LoginUserController));
+  app.get(
+    "/api/v1/auth/current-user",
+    withAuth,
+    asyncWrapper(getCurrentUserController)
+  );
   app.get("/api/v1/users", withAuth, asyncWrapper(getUsersController));
   app.get("/api/v1/users/:id", withAuth, asyncWrapper(getOneUserController));
   app.put("/api/v1/users/:id", withAuth, asyncWrapper(updateOneUserController));
@@ -57,9 +63,9 @@ export default function router(app: Express) {
   app.get("/api/v1/orders/:id", withAuth, asyncWrapper(getOneOrderController));
   app.post("/api/v1/orders", withAuth, asyncWrapper(createOrderController));
   app.post(
-    "/api/v1/orders/:id",
+    "/api/v1/orders/:id/pay",
     withAuth,
-    asyncWrapper(createPaymentIntentController)
+    asyncWrapper(createStripeCheckoutSessionController)
   );
   app.put("api/v1/orders", asyncWrapper(updateOneOrderController));
   app.delete("api/v1/orders/:id", asyncWrapper(deleteOneOrderController));

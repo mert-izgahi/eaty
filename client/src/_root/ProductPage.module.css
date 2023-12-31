@@ -1,0 +1,57 @@
+.skeleton {
+    height: 400px;
+}
+
+.imageContainer {
+    .image {
+        height: 500px;
+        object-fit: contain;
+    }
+
+    .smallImages {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--mantine-spacing-md);
+        padding: var(--mantine-spacing-xs);
+        height: 100px;
+    
+        img {
+            cursor: pointer;
+            height: 100%;
+            transition: all 0.2s;
+    
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+    }
+}
+
+
+
+
+.content {
+    padding: var(--mantine-spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--mantine-spacing-md);
+
+    .name {
+        font-size: calc(var(--mantine-font-size-xl) * 1.5);
+        font-weight: var(--mantine-font-weight-bold);
+    }
+
+    .price {
+        font-size: calc(var(--mantine-font-size-lg) * 1.5);
+        font-weight: var(--mantine-font-weight-bold);
+    }
+
+    .addToCartFlex {
+        display: flex;
+        flex-direction: row;
+        gap: var(--mantine-spacing-md);
+        align-items: flex-end;
+    }
+}

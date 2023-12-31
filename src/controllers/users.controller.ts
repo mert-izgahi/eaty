@@ -45,6 +45,12 @@ export async function LoginUserController(
   return sendResponse(res, 200, "User logged in successfully", token);
 }
 
+export async function getCurrentUserController(req: Request, res: Response) {
+  const userId = res.locals.user.id;
+  const user = await User.getOneUserById(userId);
+  return sendResponse(res, 200, "User fetched successfully", user);
+}
+
 export async function getUsersController(req: Request, res: Response) {
   const users = await User.getUsers({});
   return sendResponse(res, 200, "Users fetched successfully", users);

@@ -1,0 +1,49 @@
+.card {
+    height: 340px;
+
+    [data-mantine-color-scheme="dark"] & {
+        background-color: var(--mantine-color-dark-8);
+    }
+
+    [data-mantine-color-scheme="light"] & {
+        background-color: var(--mantine-color-gray-1);
+    }
+}
+
+.image {
+    height: 12em;
+    padding: var(--mantine-spacing-xs);
+
+    img {
+        height: 100%;
+
+        object-fit: cover;
+
+        transition: all 0.2s;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+.content {
+    display: flex;
+    padding: var(--mantine-spacing-md) !important;
+    height: 8em;
+
+    .name {
+        font-size: var(--mantine-font-size-lg);
+        font-weight: var(--mantine-font-weight-bold);
+        margin-bottom: var(--mantine-spacing-md);
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .price {
+        font-size: var(--mantine-font-size-xl);
+        font-weight: var(--mantine-font-weight-bold);
+    }
+}

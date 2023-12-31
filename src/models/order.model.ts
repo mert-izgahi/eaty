@@ -43,11 +43,8 @@ export interface IOrderSchema extends mongoose.Document {
   taxPrice: number;
   shippingPrice: number;
   totalPrice: number;
-  isPaid: boolean;
-  isDelivered: boolean;
-  paidAt: Date;
+  isDelivered: boolean;  
   deliveredAt: Date;
-
   createPaymentIntent(): Promise<{ client_secret: string }>;
 }
 
@@ -83,7 +80,6 @@ const orderSchema = new mongoose.Schema({
   taxPrice: { type: Number, required: true },
   shippingPrice: { type: Number, required: true },
   totalPrice: { type: Number, required: true },
-  isPaid: { type: Boolean, default: false },
   isDelivered: { type: Boolean, default: false },
 });
 

@@ -1,0 +1,12 @@
+.box {
+    [data-mantine-color-scheme="dark"] & {
+        background-color: var(--mantine-color-dark-8);
+    }
+
+    [data-mantine-color-scheme="light"] & {
+        background-color: var(--mantine-color-gray-1);
+    }
+
+    padding: 4em 2em;
+    border-radius: 0.5rem;
+}
